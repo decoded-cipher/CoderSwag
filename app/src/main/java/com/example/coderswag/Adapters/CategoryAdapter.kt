@@ -11,6 +11,8 @@ import com.example.coderswag.Model.Category
 import com.example.coderswag.R
 
 
+
+
 class CategoryAdapter(context: Context, categories: List<Category>): BaseAdapter() {
 
     val  context = context
@@ -18,19 +20,43 @@ class CategoryAdapter(context: Context, categories: List<Category>): BaseAdapter
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val CategoryView: View
+        val holder: ViewHolder
 
-        CategoryView = LayoutInflater.from(context).inflate(R.layout.category_list_item, null)
-        val categoryImage : ImageView = CategoryView.findViewById(R.id.categoryImage)
-        val categoryName : TextView = CategoryView.findViewById(R.id.categoryName)
+        if (convertView == null){
+            CategoryView = LayoutInflater.from(context).inflate(R.layout.category_list_item, null)
+            holder = ViewHolder()
+
+            holder.categoryImage = CategoryView.findViewById(R.id.categoryImage)
+            holder.categoryName = CategoryView.findViewById(R.id.categoryName)
+
+            CategoryView.tag = holder
+        } else {
+            holder = convertView.tag as ViewHolder
+            CategoryView = convertView
+        }
 
         val category =  categories[position]
-
         val resourceId = context.resources.getIdentifier(category.image, "drawable", context.packageName)
-        categoryImage.setImageResource(resourceId)
-        println(resourceId)
-        categoryName.text = category.title
+        holder.categoryImage?.setImageResource(resourceId)
+        holder.categoryName?.text = category.title
         return CategoryView
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     override fun getItem(position: Int): Any {
         return categories[position]
@@ -42,6 +68,11 @@ class CategoryAdapter(context: Context, categories: List<Category>): BaseAdapter
 
     override fun getCount(): Int {
         return categories.count()
+    }
+
+    private class ViewHolder{
+        var categoryImage: ImageView? = null
+        var categoryName: ImageView? = null
     }
 
 }
